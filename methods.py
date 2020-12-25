@@ -1,5 +1,6 @@
 #! /usr/bin/env python
 
+
 class Methods:
 
     def pow(self, other):
