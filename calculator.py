@@ -21,13 +21,6 @@ class OperatorError(ArithmeticError):
     pass
 
 
-class BracketsError(OperatorError):
-    pass
-
-
-form = 'round(-3 * round abs 5 (pi ^ (2 - 3), 3), 3)'
-
-
 class Calculator:
 
     pattern = r'-?\d+[.,]*\d*|\*+|\^+|/+|%+|\++|\-+|\(|\)|\w+'
@@ -51,7 +44,7 @@ class Calculator:
         try:
 
             if self.list_form.count('(') != self.list_form.count(')'):
-                raise BracketsError(
+                raise OperatorError(
                     'ERROR: brackets are not balanced')
 
             for operator in self.operations:
@@ -59,7 +52,7 @@ class Calculator:
                     if operator not in globals():
                         raise OperatorError(
                             'ERROR: unknown function \'{}\''.format(operator))
-        except BracketsError as err:
+        except OperatorError as err:
             if show:
                 print(err)
             return False
@@ -87,6 +80,9 @@ class Calculator:
                     elif n == 1 and oper in self.list_form:
                         while oper in self.list_form:
                             index = self.list_form.index(oper)
+                            if oper in {'/', '//'} and \
+                                    self.list_form[index + 1] == '0':
+                                raise OperatorError('ERROR: division by zero')
                             self.list_form[index - 1: index + 2] = [str(
                               globals()[oper](Dec(self.list_form[index - 1]),
                                               Dec(self.list_form[index + 1])))]
@@ -95,6 +91,9 @@ class Calculator:
                         self.list_form[index - 1: index + 2] = [str(
                               globals()[oper](Dec(self.list_form[index - 1]),
                                               Dec(self.list_form[index + 1])))]
+        except OperatorError as err:
+            print(err)
+            sys.exit(0)
         except Exception:
             print('ERROR: incorrect expression \'{}\''.format(self.form))
             sys.exit(0)
@@ -133,6 +132,7 @@ class Calculator:
 
 
 if __name__ == '__main__':
+    form = 'abs(round(-3 * round(pi ^ (2 - 3), 3), 3))'
     c = Calculator(form)
     c.calculate()
     if c.checking(True):
