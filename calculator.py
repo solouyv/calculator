@@ -2,7 +2,6 @@
 
 import re
 import math
-import sys
 from methods import Methods
 from math import *
 from decimal import Decimal as Dec
@@ -40,7 +39,7 @@ class Calculator:
             simpl_operations_order[0: 4],
             [a for a in self.operations if a in {'-', '+'}])
 
-    def checking(self, show=False):
+    def checking(self):
         try:
 
             if self.list_form.count('(') != self.list_form.count(')'):
@@ -52,13 +51,9 @@ class Calculator:
                     if operator not in globals():
                         raise OperatorError(
                             'ERROR: unknown function \'{}\''.format(operator))
+
         except OperatorError as err:
-            if show:
-                print(err)
-            return False
-        except OperatorError as err:
-            if show:
-                print(err)
+            print(err)
             return False
         else:
             return True
@@ -67,6 +62,7 @@ class Calculator:
         try:
             for n in range(3):
                 for oper in self.simpl_operations[n]:
+
                     if n == 0 and oper in self.list_form:
                         index = self.list_form.index(oper)
                         if oper == 'round' and len(self.list_form) > 1:
@@ -77,6 +73,7 @@ class Calculator:
                             continue
                         self.list_form[index: index + 2] = [str(
                               globals()[oper](Dec(self.list_form[index + 1])))]
+
                     elif n == 1 and oper in self.list_form:
                         while oper in self.list_form:
                             index = self.list_form.index(oper)
@@ -86,6 +83,7 @@ class Calculator:
                             self.list_form[index - 1: index + 2] = [str(
                               globals()[oper](Dec(self.list_form[index - 1]),
                                               Dec(self.list_form[index + 1])))]
+
                     elif n == 2 and oper in self.list_form:
                         index = self.list_form.index(oper)
                         self.list_form[index - 1: index + 2] = [str(
@@ -93,10 +91,10 @@ class Calculator:
                                               Dec(self.list_form[index + 1])))]
         except OperatorError as err:
             print(err)
-            sys.exit(0)
+            return
         except Exception:
-            print('ERROR: incorrect expression \'{}\''.format(self.form))
-            sys.exit(0)
+            self.list_form = [
+                'ERROR: incorrect expression \'{}\''.format(self.form)]
 
     def chenge_constants(self):
         for item in range(len(self.list_form)):
@@ -132,8 +130,7 @@ class Calculator:
 
 
 if __name__ == '__main__':
-    form = 'abs(round(-3 * round(pi ^ (2 - 3), 3), 3))'
+    form = 'abs(round(-3 * rond(pi ^ (2 - 3), 3), 3) / 0)'
     c = Calculator(form)
     c.calculate()
-    if c.checking(True):
-        print(c.list_form[0])
+    print(c.list_form[0])
