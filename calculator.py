@@ -2,17 +2,23 @@
 
 import re
 import math
-from methods import Methods
 from math import *
 from decimal import Decimal as Dec
 
+from methods import Methods
 
-simpl_operations_order = ('^', '*', '/', '//', '%',
-                          '+', '-', '(', ')', 'abs', 'round')
-funcshion = (Methods.pow, Methods.mul, Methods.div, Methods.f_div,
-             Methods.mod, Methods.add, Methods.sub, '', '', abs, round)
+simpl_operations_order = ('^', '*', '/', '//', '%', '+', '-', '(', ')',
+                          'abs', 'round', '<', '<=', '==', '!=', '>=', '>')
+funcshion = (Methods.pow, Methods.mul, Methods.div, Methods.f_div, Methods.mod,
+             Methods.add, Methods.sub, '', '', abs, round, Methods.lt,
+             Methods.le, Methods.eq, Methods.ne, Methods.ge, Methods.gt)
 for oper, func in (zip(simpl_operations_order, funcshion)):
     globals()[oper] = func
+
+functions_with_two_arguments = {'atan2', 'comb', 'copysign', 'dist', 'fmod',
+                                'ldexp', 'log', 'nextafter', 'remainder'}
+
+functions_with_integers_arguments = {'gcd', 'hypot', 'lcm', 'prod'}
 
 
 class OperatorError(ArithmeticError):
@@ -21,13 +27,12 @@ class OperatorError(ArithmeticError):
 
 class Calculator:
 
-    pattern = r'-?\d+[.,]*\d*|\*+|\^+|/+|%+|\++|\-+|\(|\)|\w+'
+    pattern = r'-?\d+[.,]*\d*|\*+|\^+|/+|%+|\++|\-+|\(|\)|\w+|[<=!>]+'
 
     def __init__(self, form):
         self.form = form
         self.list_form = re.findall(Calculator.pattern,
-                                    form.replace(',', '.'))
-        self.answer = [list(self.list_form)]
+                                    self.form.replace(',', '.'))
         self.operations = [a for a in self.list_form if not a.replace(
                                             '.', '1').replace(
                                             '-', '').isdecimal()]
@@ -37,33 +42,42 @@ class Calculator:
             [a for a in self.operations if a.isalpha() and
              a not in self.constants],
             simpl_operations_order[0: 5],
-            [a for a in self.operations if a in {'-', '+'}])
+            [a for a in self.operations if a in {'-', '+'}],
+            [a for a in self.operations if a in {'<', '<=', '==',
+                                                 '!=', '>=', '>'}])
 
     def checking(self):
         if self.list_form.count('(') != self.list_form.count(')'):
             raise OperatorError('ERROR: brackets are not balanced')
-
         for operator in self.operations:
-            for oper in operator:
-                if operator not in globals():
-                    raise OperatorError(
-                        'ERROR: unknown function \'{}\''.format(operator))
+            if operator not in globals():
+                raise OperatorError(
+                    'ERROR: unknown function \'{}\''.format(operator))
         return True
 
-    def simpl_calculate(self):
+    def func_calc_with_opti_sec_var(self, index, oper):
+        try:
+            if self.list_form[index + 2].replace('.', '1').replace(
+                    '-', '').isdecimal():
+                self.list_form[index: index + 3] = [str(
+                      globals()[oper](Dec(self.list_form[index + 1]),
+                                      int(self.list_form[index + 2])))]
+        except IndexError:
+            self.list_form[index: index + 2] = [str(
+                  globals()[oper](Dec(self.list_form[index + 1])))]
 
+    def simpl_calculate(self):
         for n in range(3):
             for oper in self.simpl_operations[n]:
 
                 if n == 0 and oper in self.list_form:
                     index = self.list_form.index(oper)
-                    if oper == 'round' and self.list_form[index + 2].replace(
-                                            '.', '1').replace(
-                                            '-', '').isdecimal():
-                        self.list_form[index: index + 3] = [str(
-                              globals()[oper](
-                                  Dec(self.list_form[index + 1]),
-                                  int(self.list_form[index + 2])))]
+                    if oper in {'log', 'sqrt'} and \
+                            float(self.list_form[index + 1]) < 0:
+                        raise OperatorError('ERROR: a negative number under the\
+ {} \'{}\''.format(oper, ' '.join(self.list_form[index: index + 2])))
+                    elif oper in {'round', 'log', 'perm'}:
+                        self.func_calc_with_opti_sec_var(index, oper)
                         continue
                     self.list_form[index: index + 2] = [str(
                           globals()[oper](Dec(self.list_form[index + 1])))]
@@ -72,8 +86,9 @@ class Calculator:
                     while oper in self.list_form:
                         index = self.list_form.index(oper)
                         if oper in {'/', '//'} and \
-                                self.list_form[index + 1] == '0':
-                            raise OperatorError('ERROR: division by zero')
+                                float(self.list_form[index + 1]) == 0:
+                            raise OperatorError('ERROR: division by zero\
+ \'{}\''.format(' '.join(self.list_form[index - 1: index + 2])))
                         self.list_form[index - 1: index + 2] = [str(
                           globals()[oper](Dec(self.list_form[index - 1]),
                                           Dec(self.list_form[index + 1])))]
@@ -102,31 +117,66 @@ class Calculator:
                     return index_left_bracket, index_right_bracket
 
     def calculate(self):
+        if self.checking():
+            if '(' not in self.list_form:
+                self.simpl_calculate()
+            else:
+                start, stop = self.search_brackets()
+                list_form, self.list_form = (self.list_form,
+                                             self.list_form
+                                             [start + 1: stop - 1])
+                self.calculate()
+                list_form[start: stop] = self.list_form
+                self.list_form = list_form
+                self.calculate()
+
+    def logical_computation(self):
+        for oper in self.simpl_operations[3]:
+            index = self.list_form.index(oper)
+            if self.list_form[index - 1] in {'True', 'False'} and \
+                    self.list_form[index + 1] in {'True', 'False'}:
+                self.list_form[index - 1: index + 2] = [str(
+                      globals()[oper](bool(self.list_form[index - 1]),
+                                      bool(self.list_form[index + 1])))]
+            elif self.list_form[index - 1] in {'True', 'False'}:
+                self.list_form[index - 1: index + 2] = [str(
+                      globals()[oper](bool(self.list_form[index - 1]),
+                                      Dec(self.list_form[index + 1])))]
+            elif self.list_form[index + 1] in {'True', 'False'}:
+                self.list_form[index - 1: index + 2] = [str(
+                      globals()[oper](Dec(self.list_form[index - 1]),
+                                      bool(self.list_form[index + 1])))]
+            else:
+                self.list_form[index - 1: index + 2] = [str(
+                      globals()[oper](Dec(self.list_form[index - 1]),
+                                      Dec(self.list_form[index + 1])))]
+
+    def start(self):
         try:
-            if self.checking():
-                if '(' not in self.list_form:
-                    self.simpl_calculate()
-                else:
-                    start, stop = self.search_brackets()
-                    list_form, self.list_form = (self.list_form,
-                                                 self.list_form
-                                                 [start + 1: stop - 1])
-                    self.calculate()
-                    list_form[start: stop] = self.list_form
-                    self.list_form = list_form
-                    self.calculate()
+            self.chenge_constants()
+            self.calculate()
+            self.logical_computation()
+            if len(self.list_form) > 1:
+                raise Exception()
+            self.answer = self.list_form[0]
         except OperatorError as err:
-            self.answer = [[str(err)]]
+            self.answer = str(err)
         except Exception:
-            self.answer = [
-                ['ERROR: incorrect expression \'{}\''.format(c.form)]]
+            self.answer = 'ERROR: incorrect expression \'{}\''.format(
+                ' '.join(self.list_form))
+        finally:
+            return self.answer
 
 
 if __name__ == '__main__':
-    form = 'abs(round(pi - 3, 3) - 4 // (-5 % 3))'
+    # form = 'round(pi - 3, 3) ==4 // log((5 % abs(-3)) //(0.5) // 1, 5) <= 3'
+    # form = '2 . (-0.5)'
+    # form = 'round(3 + 1 / (pi), 5)'
+    # form = '2 // 0'
+    # form = 'log(nan)'
+    # form = 'sqrt(-5)'
+    # form = 'log(4, 7)'
+    form = '5 >= 5 < 3 == 1'
     c = Calculator(form)
-    c.chenge_constants()
-    c.answer.append(c.list_form)
-    c.calculate()
-    for item in c.answer:
-        print(*item)
+    c.start()
+    print(c.answer)
