@@ -2,16 +2,14 @@
 
 {% block header %}
   <h1>{% block title %}Calculations{% endblock %}</h1>
+  <a class="action" href="{{ url_for('calculation.delete')}}">Clear all</a>
 {% endblock %}
 
 {% block content %}
 {% for answer in answers %}
-    {% if g.user['id'] == answer['author_id'] %} 
-    <a class="action" href="{{ url_for('calculation.delete')}}">Clear all</a>
-    {% endif %}
-    <article>
-      <p class="body">{{ answer['expression'] }}</p>
-      <p class="body">{{ answer['solving'] }}</p>
+    <article class="row">
+      <p class="body col">{{ answer['expression'] }}</p>
+      <p class="body col">{{ answer['solving'] }}</p>
     </article>
     {% endfor %}
 {% endblock %}

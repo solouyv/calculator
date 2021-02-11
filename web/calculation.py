@@ -49,7 +49,7 @@ def index():
 def answer():
     if request.method == 'POST':
         return redirect(url_for('calculation.index'))
-    return render_template('calculation/answer.html')
+    return render_template('calculation/answer.html', answer=solving)
 
 
 @bp.route('/history', methods=('GET', 'POST'))
