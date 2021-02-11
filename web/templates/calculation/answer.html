@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1 class="mb-5">{% block title %}Calculator{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<form method="post" class="my_class border border-3 mx-5 p-3 rounded-3">
+  <div class="form-floating">
+    <span class="d-block fs-2 p-2 bg-dark text-white">{{ solving }}</span>
+    <button class=" my-3 btn btn-primary" type="submit" autofocus>AC</button>
+  </div>
+</form>
+{% endblock %}

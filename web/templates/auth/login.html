@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<main class="form-signin">
+  <form method="post">
+    <h1 class="h2 my-5 fw-normal">Please log in</h1>
+    <label for="username" class="visually-hidden">Username</label>
+    <input name="username" id="username" class="form-control" placeholder="Username" required autofocus>
+    <label for="password" class="visually-hidden">Password</label>
+    <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+    <button class="w-100 my-5 btn btn-lg btn-primary" type="submit" value="Log In">Log in</button>
+  </form>
+</main>
+{% endblock %}

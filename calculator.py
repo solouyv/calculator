@@ -7,6 +7,8 @@ from decimal import Decimal as Dec
 
 from methods import Methods
 
+FUNKS, MUL_DIV, ADD_SUB, BOOL = range(4)
+
 simpl_operations_order = ('^', '*', '/', '//', '%', '+', '-', '(', ')',
                           'abs', 'round', '<', '<=', '==', '!=', '>=', '>')
 funcshion = (Methods.pow, Methods.mul, Methods.div, Methods.f_div, Methods.mod,
@@ -36,8 +38,9 @@ class Calculator:
         self.operations = [a for a in self.list_form if not a.replace(
                                             '.', '1').replace(
                                             '-', '').isdecimal()]
-        self.constants = [a for a in math.__dict__ if not a.startswith('_') and
-                          not callable(math.__dict__[a])]
+        print(self.operations)
+        self.constants = [a for a in math.__dict__ if not a.startswith('_')
+                          and not callable(math.__dict__[a])]
         self.simpl_operations = (
             [a for a in self.operations if a.isalpha() and
              a not in self.constants],
@@ -45,6 +48,7 @@ class Calculator:
             [a for a in self.operations if a in {'-', '+'}],
             [a for a in self.operations if a in {'<', '<=', '==',
                                                  '!=', '>=', '>'}])
+        print(self.simpl_operations)
 
     def checking(self):
         if self.list_form.count('(') != self.list_form.count(')'):
@@ -67,22 +71,22 @@ class Calculator:
                   globals()[oper](Dec(self.list_form[index + 1])))]
 
     def simpl_calculate(self):
-        for n in range(3):
-            for oper in self.simpl_operations[n]:
+        for order in range(3):
+            for oper in self.simpl_operations[order]:
 
-                if n == 0 and oper in self.list_form:
+                if order == FUNKS and oper in self.list_form:
                     index = self.list_form.index(oper)
                     if oper in {'log', 'sqrt'} and \
                             float(self.list_form[index + 1]) < 0:
                         raise OperatorError('ERROR: a negative number under the\
- {} \'{}\''.format(oper, ' '.join(self.list_form[index: index + 2])))
+ \'{}\' function: {}'.format(oper, self.list_form[index + 1]))
                     elif oper in {'round', 'log', 'perm'}:
                         self.func_calc_with_opti_sec_var(index, oper)
                         continue
                     self.list_form[index: index + 2] = [str(
                           globals()[oper](Dec(self.list_form[index + 1])))]
 
-                elif n == 1 and oper in self.list_form:
+                elif order == MUL_DIV and oper in self.list_form:
                     while oper in self.list_form:
                         index = self.list_form.index(oper)
                         if oper in {'/', '//'} and \
@@ -93,16 +97,16 @@ class Calculator:
                           globals()[oper](Dec(self.list_form[index - 1]),
                                           Dec(self.list_form[index + 1])))]
 
-                elif n == 2 and oper in self.list_form:
+                elif order == ADD_SUB and oper in self.list_form:
                     index = self.list_form.index(oper)
                     self.list_form[index - 1: index + 2] = [str(
                           globals()[oper](Dec(self.list_form[index - 1]),
                                           Dec(self.list_form[index + 1])))]
 
     def chenge_constants(self):
-        for item in range(len(self.list_form)):
-            if self.list_form[item] in self.constants:
-                self.list_form[item] = globals()[self.list_form[item]]
+        for index, item in enumerate(self.list_form):
+            if self.list_form[index] in self.constants:
+                self.list_form[index] = globals()[self.list_form[index]]
 
     def search_brackets(self):
         index_left_bracket = self.list_form.index('(')
@@ -131,7 +135,7 @@ class Calculator:
                 self.calculate()
 
     def logical_computation(self):
-        for oper in self.simpl_operations[3]:
+        for oper in self.simpl_operations[BOOL]:
             index = self.list_form.index(oper)
             if self.list_form[index - 1] in {'True', 'False'} and \
                     self.list_form[index + 1] in {'True', 'False'}:
@@ -169,14 +173,16 @@ class Calculator:
 
 
 if __name__ == '__main__':
-    # form = 'round(pi - 3, 3) ==4 // log((5 % abs(-3)) //(0.5) // 1, 5) <= 3'
+    # form = ('round(pi - 3, 3) ==4 // log((5 % abs(-3)) //(0.5)'
+            # ' // 1, 5) <= 3 + 6')
     # form = '2 . (-0.5)'
     # form = 'round(3 + 1 / (pi), 5)'
     # form = '2 // 0'
-    # form = 'log(nan)'
+    # form = 'log(-3)'
     # form = 'sqrt(-5)'
     # form = 'log(4, 7)'
-    form = '5 >= 5 < 3 == 1'
+    # form = '5 >= 5 < 3 == 1'
+    form = '-9 * (-8)'
     c = Calculator(form)
     c.start()
     print(c.answer)
