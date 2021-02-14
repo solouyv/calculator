@@ -23,7 +23,6 @@ def index():
         expression = request.form['expression']
         error = None
         global solving
-        solving = calculate(expression)
 
         if not expression:
             error = 'expression is required.'
@@ -31,6 +30,7 @@ def index():
         if error is not None:
             flash(error)
         else:
+            solving = calculate(expression)
             if g.user and not solving.startswith('ERROR'):
                 db = get_db()
                 db.execute(

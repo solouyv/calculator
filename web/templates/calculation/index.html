@@ -1,33 +1,32 @@
 {% extends 'base.html' %}
 
-{% block header %}
-  <h1 class="mb-5">{% block title %}Calculator{% endblock %}</h1>
-{% endblock %}
-
 {% block content %}
-<form method="post" class="my_class border border-3 mx-5 p-3 rounded-3">
-  <div class="form-floating mb-3 pb-3">
-    <input class="form-control" id="expression" name="expression" autofocus>
-    <label  for="expression">Enter expression</label>
-    <input class=" my-3 btn btn-primary" type="submit" value="Calculate">
-  </div>
-{% endblock %}
-
-{% block footer %}
-  <button class=" my-3 btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-    Modules available for use
-  </button>
-
-  <div class="collapse" id="collapseExample">
-    <div class="card card-body">
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" checked>
-        <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>
+<div class="text-center">
+      <h1 class="mb-5">Calculator</h1>
+    <form method="post" class="my_class border border-3 mx-5 p-3 rounded-3">
+      <div class="form-floating mb-3 pb-3">
+        <input class="form-control" id="expression" name="expression" autofocus>
+        <label  for="expression">Enter expression</label>
+        <input class=" my-3 btn btn-primary" type="submit" value="Calculate">
       </div>
-      <div class="form-check form-switch">
-        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
-        <label class="form-check-label" for="flexSwitchCheckChecked">Checked switch checkbox input</label>
+    {% endblock %}
+
+    {% block footer %}
+      <button class=" my-3 btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        Modules available for use
+      </button>
+
+      <div class="collapse" id="collapseExample">
+        <div class="card card-body">
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" checked>
+            <label class="form-check-label" for="flexSwitchCheckDefault">Default switch checkbox input</label>
+          </div>
+          <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
+            <label class="form-check-label" for="flexSwitchCheckChecked">Checked switch checkbox input</label>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
+</div>
 {% endblock %}

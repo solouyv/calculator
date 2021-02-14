@@ -6,10 +6,9 @@
 {% endblock %}
 
 {% block content %}
+<ul>
 {% for answer in answers %}
-    <article class="row">
-      <p class="body col">{{ answer['expression'] }}</p>
-      <p class="body col">{{ answer['solving'] }}</p>
-    </article>
-    {% endfor %}
+  <li class="body">{{ answer['expression'] }} = {{ answer['solving'] }}</li>
+{% endfor %}
+</ul>
 {% endblock %}
