@@ -20,9 +20,12 @@ class Test_Calculator(unittest.TestCase):
         self.M = calculator.Calculator(
             'round(hypot(pi,12.456,15.987,20)+hypot(4),3)'
         )
-        # self.M = calculator.Calculator(
-        #     'round(pi-3,3)==4//log((5%abs(-3))//(0.5)//1,5)<=3+6'
-        # )
+        self.N = calculator.Calculator(
+            'round(pi-3,3)==4//log((5%abs(-3))//(0.5)//1,5)<=3+6'
+        )
+        self.P = calculator.Calculator(
+            'round(round(pi)^(log(hypot(12.32,65.12)//12,10))+round(pi,4),6)'
+        )
 
     def test_pars(self):
         self.assertEqual(self.A.list_form, ['-23', '-', '12'])
@@ -47,37 +50,35 @@ class Test_Calculator(unittest.TestCase):
             'round', '(', 'hypot', '(', 'pi', ',', '12.456', ',', '15.987',
             ',', '20', ')', '+', 'hypot', '(', '4', ')', ',', '3', ')'
         ])
-        # self.assertEqual(
-        #     self.M.list_form,
-        #     ['round', '(', 'pi', '-', '3', ',', '3', ')', '==', '4', '//',
-        #      'log', '(', '(', '5', '%', 'abs', '(', '-3', ')', ')', '//', '(',
-        #      '0.5', ')', '//', '1', ',', '5', ')', '<=', '3', '+', '6']
-        # )
+        self.assertEqual(
+            self.N.list_form,
+            ['round', '(', 'pi', '-', '3', ',', '3', ')', '==', '4', '//',
+             'log', '(', '(', '5', '%', 'abs', '(', '-3', ')', ')', '//', '(',
+             '0.5', ')', '//', '1', ',', '5', ')', '<=', '3', '+', '6']
+        )
 
     def test_calculating(self):
-        self.assertEqual(self.A.answer(), '-35')
-        self.assertEqual(self.B.answer(), '19.68')
-        self.assertEqual(self.C.answer(), '72')
+        self.assertEqual(self.A.start(), '-35')
+        self.assertEqual(self.B.start(), '19.68')
+        self.assertEqual(self.C.start(), '72')
         self.assertEqual(
-            self.D.answer(), 'ERROR: incorrect expression \'2 ( -0.5 )\'')
+            self.D.start(), 'ERROR: incorrect expression \'2 -0.5\'')
         self.assertEqual(
-            self.E.answer(), 'ERROR: division by zero \'2 // 0\'')
-        self.assertEqual(self.G.answer(
+            self.E.start(), 'ERROR: division by zero \'2 // 0\'')
+        self.assertEqual(self.G.start(
         ), 'ERROR: a negative number under the \'log\' function: -3')
-        self.assertEqual(self.H.answer(
+        self.assertEqual(self.H.start(
         ), 'ERROR: a negative number under the \'sqrt\' function: -5')
-        self.assertEqual(self.J.answer(), '0.7124143742160444')
-        self.assertEqual(self.L.answer(), '6.1416')
-        self.assertEqual(self.K.answer(), '3.31831')
-        self.assertEqual(self.M.answer(), '31.90824')
-        # self.assertEqual(self.M.answer(), 'True')
+        self.assertEqual(self.J.start(), '0.7124143742160444')
+        self.assertEqual(self.L.start(), '6.1416')
+        self.assertEqual(self.K.start(), '3.24145')
+        self.assertEqual(self.M.start(), '32.646')
+        self.assertEqual(self.N.start(), 'True')
+        self.assertEqual(self.P.start(), '5.296829')
 
     def test_bool(self):
         self.F.logical_computation()
-        self.assertEqual(self.F.list_form, ['True'])
-
-    # def test_search_brackets(self):
-    #     self.
+        self.assertEqual(self.F.list_form[0], 'True')
 
 
 if __name__ == '__main__':
