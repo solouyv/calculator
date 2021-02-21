@@ -9,7 +9,7 @@ body {
   padding-top: 65px;
   padding-bottom: 40px;
   background-color: #EBDCB2;
-  color: #662E1C
+  color: #662E1C;
 }
 
 .form-signin {
@@ -42,7 +42,6 @@ body {
   border-top-right-radius: 0;
 }
 .card {
-  max-width: 500px;
   margin: auto;
 }
 .btn-primary {
@@ -59,4 +58,11 @@ body {
 }
 .my_class {
   background-color: #AF4425;
+}
+.card {
+    margin: auto;
+}
+.row {
+  margin-right: 0;
+  margin-left: 0;
 }

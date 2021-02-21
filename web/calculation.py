@@ -2,7 +2,7 @@
 
 import calculator
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, request, url_for,
 )
 
 from .db import get_db
@@ -20,12 +20,19 @@ def calculate(string):
 @bp.route('/', methods=('GET', 'POST'))
 def index():
     if request.method == 'POST':
-        expression = request.form['expression']
         error = None
+        expression = request.form['expression']
+        modules = request.form['modules'].split(',')
+        try:
+            if modules[0]:
+                calculator.Imoprt_module(modules).import_module()
+        except ModuleNotFoundError as err:
+            error = err
+
         global solving
 
         if not expression:
-            error = 'expression is required.'
+            error = 'Expression is required.'
 
         if error is not None:
             flash(error)
@@ -56,6 +63,14 @@ def answer():
 @login_required
 def history():
     db = get_db()
+    if request.method == 'POST':
+        db.execute(
+            'DELETE FROM solving_expression'
+            ' WHERE author_id = ?',
+            (g.user['id'],)
+        )
+        db.commit()
+        return redirect(url_for('calculation.index'))
     answers = db.execute(
         'SELECT  expression, solving, author_id'
         ' FROM solving_expression p JOIN user u ON p.author_id = u.id'
@@ -64,7 +79,6 @@ def history():
     return render_template('calculation/history.html', answers=answers)
 
 
-@bp.route('/delete', methods=('GET', 'POST'))
-@login_required
-def delete():
-    return render_template('calculation/index.html')
+@bp.route('/about', methods=('GET', 'POST'))
+def about():
+    return render_template('calculation/about.html')

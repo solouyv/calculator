@@ -1,14 +1,25 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Calculations{% endblock %}</h1>
-  <a class="action" href="{{ url_for('calculation.delete')}}">Clear all</a>
+<div class="text-center">
+  <form method="post">
+    <h1 class="mb-3 mt-5">History</h1>
+    <input class="my-3 btn btn-primary" type="submit" value="Clear all">
+  </form>
+</div>
 {% endblock %}
 
 {% block content %}
-<ul>
-{% for answer in answers %}
-  <li class="body">{{ answer['expression'] }} = {{ answer['solving'] }}</li>
-{% endfor %}
-</ul>
+<div>
+  <form class="my_class border border-3 mx-5 p-3 rounded-3">
+    <div class="form-floating mb-3 pb-3">
+        <div class="card card-body">
+          <ul>
+          {% for answer in answers %}
+            <li>{{ answer['expression'] }} = {{ answer['solving'] }}</li>
+          {% endfor %}
+          </ul>
+        </div>
+    </div>
+</div>
 {% endblock %}

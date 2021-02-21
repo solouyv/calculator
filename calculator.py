@@ -1,8 +1,11 @@
 #!/usr/bin/env python
 
+import os
 import re
 import math
 import operator
+import importlib
+import sys
 from math import *
 from decimal import Decimal as Dec
 
@@ -21,6 +24,27 @@ for oper, func in (zip(simpl_operations_order, funcshion)):
 
 class OperatorError(ArithmeticError):
     pass
+
+
+class Imoprt_module:
+    def __init__(self, modules):
+        self.modules = modules
+
+    def import_module(self):
+        for module in self.modules:
+            if '/' in module or '\\' in module:
+                path, name = os.path.split(module)
+                if name.endswith('.py'):
+                    name = name[:-3]
+                if path not in sys.path:
+                    sys.path.append(path)
+                mod = importlib.import_module(name)
+                for key, value in mod.__dict__.items():
+                    globals()[key] = value
+            else:
+                mod = importlib.import_module(module.strip())
+                for key, value in mod.__dict__.items():
+                    globals()[key] = value
 
 
 class My_str(str):
