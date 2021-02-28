@@ -3,6 +3,9 @@
 
 venv/
 
+Pipfile
+Pipfile.lock
+
 __pycache__/
 
 instance/
