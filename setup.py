@@ -9,7 +9,7 @@ class PostInstallCommand(install):
     """Post-installation for installation mode."""
     def run(self):
         install.run(self)
-        check_call("export FLASK_APP=flaskr".split())
+        check_call("export FLASK_APP=web".split())
         check_call("flask init-db".split())
 
 
