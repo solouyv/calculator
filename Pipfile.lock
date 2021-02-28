@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "65c1ad346871ec8b831020ddb646a5feb43acbb124473e42d180babadcf69f86"
+            "sha256": "96efcc652cf7ed87b643119d42128e3343bdcb2fdf940923d5c6020bfcef1649"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -107,6 +107,10 @@
             "version": "==1.1.1"
         },
         "webpycalc": {
+            "editable": true,
+            "path": "."
+        },
+        "webpycalc-roman-soloyouv": {
             "editable": true,
             "path": "."
         },

@@ -7,6 +7,7 @@ verify_ssl = true
 
 [packages]
 webpycalc = {editable = true, path = "."}
+webpycalc-roman-soloyouv = {editable = true, path = "."}
 
 [requires]
 python_version = "3.9"
