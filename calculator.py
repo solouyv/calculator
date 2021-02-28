@@ -26,7 +26,7 @@ class OperatorError(ArithmeticError):
     pass
 
 
-class Impoprt_module:
+class Import_module:
     def __init__(self, modules):
         self.modules = modules
 

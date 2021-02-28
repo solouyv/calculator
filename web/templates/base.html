@@ -35,9 +35,11 @@
           <div class="d-flex flex-row-reverse bd-highlight">
             {% if g.user %}
             <div class="p-2 bd-highlight"></div>
+            <div class="p-2 bd-highlight"><a href="{{ url_for('calculation.quit') }}">Quit</a></div>
             <div class="p-2 bd-highlight"><a href="#">{{ g.user['username'] }}</a></div>
             <div class="p-2 bd-highlight"><a href="{{ url_for('auth.logout') }}">Log Out</a></div>
             {% else %}
+            <div class="p-2 bd-highlight"><a href="{{ url_for('calculation.quit') }}">Quit</a></div>
             <div class="p-2 bd-highlight"><a href="{{ url_for('auth.register') }}">Register</a></div>
             <div class="p-2 bd-highlight"><a href="{{ url_for('auth.login') }}">Log In</a></div>
             {% endif %}

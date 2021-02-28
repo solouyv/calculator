@@ -4,12 +4,12 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
-pylint = "*"
-flask = "*"
-ipdb = "*"
-pudb = "*"
 
 [packages]
+flask = "*"
+flask-socketio = "*"
+python-socketio = "*"
+webpycalc = {editable = true, path = "."}
 
 [requires]
 python_version = "3.9"

@@ -25,7 +25,7 @@ def index():
         modules = request.form['modules'].split(',')
         try:
             if modules[0]:
-                calculator.Imoprt_module(modules).import_module()
+                calculator.Import_module(modules).import_module()
         except ModuleNotFoundError as err:
             error = err
 
@@ -82,3 +82,11 @@ def history():
 @bp.route('/about', methods=('GET', 'POST'))
 def about():
     return render_template('calculation/about.html')
+
+
+@bp.route('/quit')
+def quit():
+    shutdown_hook = request.environ.get('werkzeug.server.shutdown')
+    if shutdown_hook is not None:
+        shutdown_hook()
+    return render_template('calculation/quit.html')
