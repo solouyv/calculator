@@ -72,8 +72,7 @@ class Test_Auth_Actions(Test_web_case):
             data={'username': 'a', 'password': 'a'}
         )
         self.assertEqual(
-            'http://localhost/auth/login',
-            rv.headers['Location']
+            'http://localhost/auth/login', rv.headers['Location']
         )
         with self.app.app_context():
             self.assertIsNotNone(

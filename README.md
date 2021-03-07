@@ -2,7 +2,7 @@ A simple python calculator.
 
 To install the program, use the command 
 
-	pip install -e .
+    pip install -e .
 
 After installation, enter the following in the terminal: 
 
