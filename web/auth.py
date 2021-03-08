@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+'''
+The module for creating a auth flask Blueprint
+'''
 
 import functools
 
@@ -15,6 +18,9 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 @bp.route('/register', methods=('GET', 'POST'))
 def register():
+    '''
+The method for returning a page with a registration form and registration
+    '''
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -45,6 +51,10 @@ def register():
 
 @bp.route('/login', methods=('GET', 'POST'))
 def login():
+    '''
+    The method for returning a page with a form for authentication
+    and authentication
+    '''
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
@@ -71,6 +81,9 @@ def login():
 
 @bp.before_app_request
 def load_logged_in_user():
+    '''
+    The method for getting data of current user
+    '''
     user_id = session.get('user_id')
 
     if user_id is None:
@@ -83,11 +96,17 @@ def load_logged_in_user():
 
 @bp.route('/logout')
 def logout():
+    '''
+    The method for logout
+    '''
     session.clear()
     return redirect(url_for('index'))
 
 
 def login_required(view):
+    '''
+    The method redirects to the authorization page if authorization is required
+    '''
     @functools.wraps(view)
     def wrapped_view(**kwargs):
         if g.user is None:

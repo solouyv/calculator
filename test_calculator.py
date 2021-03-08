@@ -126,13 +126,31 @@ class Test_Calculator_is_number(unittest.TestCase):
         self.assertFalse(self.C.is_number('-1r3.123'))
 
 
-class Test_Calculator_logical_computation(unittest.TestCase):
+class Test_Calculator_logical_computation_1(unittest.TestCase):
     def setUp(self):
         self.F = calculator.Calculator(F)
 
     def test_logical_computation(self):
         self.F.logical_computation()
         self.assertEqual(self.F.list_form, ['True'])
+
+
+class Test_Calculator_logical_computation_2(unittest.TestCase):
+    def setUp(self):
+        self.F = calculator.Calculator('False==True')
+
+    def test_logical_computation(self):
+        self.F.logical_computation()
+        self.assertEqual(self.F.list_form, ['False'])
+
+
+class Test_Calculator_logical_computation_3(unittest.TestCase):
+    def setUp(self):
+        self.F = calculator.Calculator('5==False')
+
+    def test_logical_computation(self):
+        self.F.logical_computation()
+        self.assertEqual(self.F.list_form, ['False'])
 
 
 class Test_Calculator_search_brackets(unittest.TestCase):

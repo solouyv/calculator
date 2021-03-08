@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+'''
+The module for creating a calculator flask Blueprint
+'''
 
 import calculator
 from flask import (
@@ -12,6 +15,9 @@ bp = Blueprint('calculation', __name__)
 
 
 def calculate(string):
+    '''
+    The method for evaluating an expression
+    '''
     item = calculator.Calculator(string)
     item.start()
     return item.answer
@@ -19,6 +25,10 @@ def calculate(string):
 
 @bp.route('/', methods=('GET', 'POST'))
 def index():
+    '''
+    The method to return the index html page with a request for the expression,
+    to produce the calculation and call the answer page
+    '''
     if request.method == 'POST':
         error = None
         expression = request.form['expression']
@@ -54,6 +64,9 @@ def index():
 
 @bp.route('/answer', methods=('POST', 'GET'))
 def answer():
+    '''
+    The method to return the answer html page with a result of calculations
+    '''
     if request.method == 'POST':
         return redirect(url_for('calculation.index'))
     return render_template('calculation/answer.html', answer=solving)
@@ -62,6 +75,9 @@ def answer():
 @bp.route('/history', methods=('GET', 'POST'))
 @login_required
 def history():
+    '''
+    The method for returning a page with the history of calculations
+    '''
     db = get_db()
     if request.method == 'POST':
         db.execute(
@@ -81,11 +97,18 @@ def history():
 
 @bp.route('/about', methods=('GET', 'POST'))
 def about():
+    '''
+    The method for returning the page with the description of the program
+    '''
     return render_template('calculation/about.html')
 
 
 @bp.route('/quit')
 def quit():
+    '''
+    The method for returning the page with goodbye
+    and stopping the flask server
+    '''
     shutdown_hook = request.environ.get('werkzeug.server.shutdown')
     if shutdown_hook is not None:
         shutdown_hook()

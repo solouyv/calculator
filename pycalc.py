@@ -1,10 +1,18 @@
 #!/usr/bin/env python3
+'''
+Creating an entry point and usin gargparse
+'''
+
 
 import argparse
 import calculator
 
 
 def main():
+    '''
+    Creating an entry point and usin gargparse
+
+    '''
     usage = 'pycalc [-h] EXPRESSION [-m MODULE [MODULE ...]]'
     description = 'Pure-python command-line calculator.'
     parser = argparse.ArgumentParser(usage=usage, description=description)

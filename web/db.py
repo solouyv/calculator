@@ -1,4 +1,7 @@
 #!/usr/bin/env python3
+'''
+Database creation and management
+'''
 
 import sqlite3
 
@@ -8,6 +11,9 @@ from flask.cli import with_appcontext
 
 
 def get_db():
+    '''
+    Connect the database
+    '''
     if 'db' not in g:
         g.db = sqlite3.connect(
             current_app.config['DATABASE'],
@@ -19,6 +25,9 @@ def get_db():
 
 
 def close_db(e=None):
+    '''
+    Close the database
+    '''
     db = g.pop('db', None)
 
     if db is not None:
@@ -27,7 +36,9 @@ def close_db(e=None):
 
 def init_db():
     db = get_db()
-
+    '''
+    Create the database
+    '''
     with current_app.open_resource('schema.sql') as f:
         db.executescript(f.read().decode('utf8'))
 
@@ -41,5 +52,8 @@ def init_db_command():
 
 
 def init_app(app):
+    '''
+    Register with the Application
+    '''
     app.teardown_appcontext(close_db)
     app.cli.add_command(init_db_command)
