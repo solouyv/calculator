@@ -25,7 +25,9 @@ class Test_web_case(unittest.TestCase):
             return self._client.get('/auth/logout')
 
     def setUp(self):
-        with open('data.sql', 'rb') as f:
+        with open(
+            os.path.join(os.path.dirname(__file__), 'data.sql'), 'rb'
+        ) as f:
             _data_sql = f.read().decode('utf8')
         self.db_fd, self.db_path = tempfile.mkstemp()
         self.app = create_app({

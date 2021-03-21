@@ -2,7 +2,6 @@
 '''
 The module for creating a calculator flask Blueprint
 '''
-
 import calculator
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for,

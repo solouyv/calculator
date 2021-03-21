@@ -2,7 +2,6 @@
 '''
 Creating an entry point for a web application
 '''
-
 import web
 import webbrowser
 

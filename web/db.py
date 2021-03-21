@@ -2,7 +2,6 @@
 '''
 Database creation and management
 '''
-
 import sqlite3
 
 import click

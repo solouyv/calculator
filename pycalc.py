@@ -2,8 +2,6 @@
 '''
 Creating an entry point and usin gargparse
 '''
-
-
 import argparse
 import calculator
 

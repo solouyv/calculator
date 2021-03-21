@@ -2,21 +2,6 @@
 '''
 A module containing the main computing core for the calculator.
 
-    Classes:
-        OperatorError(ArithmeticError)
-            Custom exception handling class
-
-        Import_module
-            Class for adding additional modules
-
-        My_str(str)
-            Adds an additional 'attr' attribute to the standard 'str' class
-
-        Parser
-            Class for parsing a string into elements
-
-        Calculator
-            Calculating the given str: expression
 '''
 import os
 import re
